@@ -271,7 +271,7 @@ class FlxSlider extends FlxSpriteGroup
 	override public function update(elapsed:Float):Void
 	{
 		// Clicking and sound logic
-		if (FlxMath.mouseInFlxRect(false, _bounds))
+		if (mouseInRect(_bounds))
 		{
 			if (hoverAlpha != 1)
 			{
@@ -289,7 +289,7 @@ class FlxSlider extends FlxSpriteGroup
 
 			if (FlxG.mouse.pressed)
 			{
-				handle.x = FlxG.mouse.screenX;
+				handle.x = FlxG.mouse.getPositionInCameraView(camera).x;
 				updateValue();
 
 				#if FLX_SOUND_SYSTEM
@@ -316,7 +316,7 @@ class FlxSlider extends FlxSpriteGroup
 		}
 
 		// Update the target value whenever the slider is being used
-		if ((FlxG.mouse.pressed) && (FlxMath.mouseInFlxRect(false, _bounds)))
+		if ((FlxG.mouse.pressed) && (mouseInRect(_bounds)))
 		{
 			updateValue();
 		}
@@ -337,6 +337,14 @@ class FlxSlider extends FlxSpriteGroup
 		valueLabel.text = Std.string(FlxMath.roundDecimal(value, decimals));
 
 		super.update(elapsed);
+	}
+
+	private function mouseInRect(rect:flixel.math.FlxRect)
+	{
+		if (FlxMath.pointInFlxRect(FlxG.mouse.getPositionInCameraView(camera).x, FlxG.mouse.getPositionInCameraView(camera).y, rect))
+			return true;
+		else
+			return false;
 	}
 
 	/**
